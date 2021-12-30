@@ -126,7 +126,7 @@ public final class VeloxAnticheat extends JavaPlugin implements PluginMessageLis
 		consoleInfo("Listening for client brands");
 
 		// Enable Metrics
-		new Metrics(this, 13694);
+		new Metrics(this, 13773);
 
 		consoleInfo("Startup complete");
 	}

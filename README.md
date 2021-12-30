@@ -1,9 +1,6 @@
 <img src="assets/logo.png" alt="" width="700"/>
-<br>
 
-[![Last Commit](https://img.shields.io/github/last-commit/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/commits/master) [![License](https://img.shields.io/github/license/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/blob/master/LICENSE) [![Stars](https://img.shields.io/github/stars/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/stargazers)
-
-# About
+# About [![Last Commit](https://img.shields.io/github/last-commit/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/commits/master) [![License](https://img.shields.io/github/license/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/blob/master/LICENSE) [![Stars](https://img.shields.io/github/stars/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/stargazers) 
 The goal of Velox is to create a simple and accurate anticheat, based on only the tools made available by Bukkit/Spigot. 
 This means no external libraries, no reflection and no NMS. Why? Because why not (there are many reasons why).
 
