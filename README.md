@@ -1,8 +1,6 @@
 <img src="assets/logo.png" alt="" width="700"/>
 <br>
-<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Rammelkast/VeloxAnticheat?style=flat-square">&nbsp;
-<a href="https://github.com/Rammelkast/VeloxAnticheat/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/Rammelkast/VeloxAnticheat?style=flat-square"></a>&nbsp;
-<a href="https://github.com/Rammelkast/VeloxAnticheat/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Rammelkast/VeloxAnticheat?style=flat-square"></a>&nbsp;
+[![Last Commit](https://img.shields.io/github/last-commit/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/commits/master) [![License](https://img.shields.io/github/license/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/blob/master/LICENSE) [![Stars](https://img.shields.io/github/stars/Rammelkast/VeloxAnticheat?style=flat-square)](https://github.com/Rammelkast/VeloxAnticheat/stargazers)
 
 
 # About
