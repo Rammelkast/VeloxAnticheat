@@ -1,0 +1,177 @@
+# Velox Anticheat Configuration
+# General settings
+general:
+  # Test mode will prevent notifications and kicks from happening
+  # and will send players detailed information every time they fail a check
+  test-mode: false
+  # Amount of ticks to account for connecting
+  # Increase this if you have false positives when joining
+  connect-time: 50
+  # Amount of ticks to account for velocity
+  # Increase this if you have issues with launchpads, etc.
+  velocity-time: 50
+  # Amount of ticks to rubberband a player
+  rubberband-ticks: 4
+  # Any TPS lower than this will indicate server lag
+  # Increase if you consistantly have issues with low TPS false positives
+  lag-exempt-tps: 17.5
+# Violation settings
+violation:
+  # How often should a violation decrease be applied
+  # Time in seconds (default: 5 * 60 = 300 seconds)
+  decrease-time: 300
+  # The multiplier which is applied to violations
+  # Between 0 and 1 (default = 0.25, meaning new VL = 1/4 * old VL)
+  decrease-factor: 0.25
+# Checks settings
+checks:
+  # Aura check settings
+  aura:
+    # At what violation level should staff be notified (or -1 to disable)
+    notify-vl: 8
+    # At what violation level should players be removed from the server (or -1 to disable)
+    kick-vl: 16
+    # Aura (A)
+    typeA:
+      # Should this check be enabled?
+      enabled: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Aura (B)
+    typeB:
+      # Should this check be enabled?
+      enabled: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Aura (C)
+    typeC:
+      # Should this check be enabled?
+      enabled: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Aura (D)
+    typeD:
+      # Should this check be enabled?
+      enabled: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Aura (E)
+    typeE:
+      # Should this check be enabled?
+      enabled: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 0.8
+    # Aura (F)
+    typeF:
+      # Should this check be enabled?
+      enabled: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.2
+    # Aura (G)
+    typeG:
+      # Should this check be enabled?
+      enabled: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+  # Fly check settings
+  fly:
+    # At what violation level should staff be notified (or -1 to disable)
+    notify-vl: 12
+    # At what violation level should players be removed from the server (or -1 to disable)
+    kick-vl: 25
+    # Fly (A)
+    typeA:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Fly (B)
+    typeB:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Fly (C)
+    typeC:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Fly (D)
+    typeD:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Fly (E)
+    typeE:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+  # Motion check settings
+  motion:
+    # At what violation level should staff be notified (or -1 to disable)
+    notify-vl: 6
+    # At what violation level should players be removed from the server (or -1 to disable)
+    kick-vl: 15
+    # Motion (A)
+    typeA:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Motion (B)
+    typeB:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+  # Reach check settings
+  reach:
+    # At what violation level should staff be notified (or -1 to disable)
+    notify-vl: 4
+    # At what violation level should players be removed from the server (or -1 to disable)
+    kick-vl: 12
+    # Reach (A)
+    typeA:
+      # Should this check be enabled?
+      enabled: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+  # Speed check settings
+  speed:
+    # At what violation level should staff be notified (or -1 to disable)
+    notify-vl: 12
+    # At what violation level should players be removed from the server (or -1 to disable)
+    kick-vl: 25
+    # Speed (A)
+    typeA:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0
+    # Speed (B)
+    typeB:
+      # Should this check be enabled?
+      enabled: true
+      # Should players who flag this check be rubberbanded?
+      rubberband: true
+      # How much should a single violation weigh for the overall check violation level
+      weight: 1.0

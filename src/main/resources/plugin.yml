@@ -1,0 +1,32 @@
+name: VeloxAnticheat
+description: Simple, stable and accurate anticheat - using only the Bukkit API
+main: com.rammelkast.veloxanticheat.VeloxAnticheat
+authors: [Rammelkast]
+api-version: 1.18
+startup: postworld
+version: ${project.build.version}
+commands:
+  veloxanticheat:
+    aliases: [vac, velox]
+    description: The management command for Velox Anticheat
+    usage: /vac help
+permissions:
+  velox.admin:
+    description: Gives access to all features of Velox Anticheat
+    children:
+      velox.mod: true
+      velox.verbose: true
+  velox.mod:
+    description: Gives access to all moderator features of Velox Anticheat
+    children:
+      velox.help: true
+      velox.alert: true
+      velox.report: true
+  velox.help:
+    description: Gives access to the /vac help command
+  velox.alert:
+    description: Players with this permission will receive alerts
+  velox.report:
+    description: Gives access to the /vac report command
+  velox.verbose:
+    description: Gives access to the /vac verbose command
