@@ -37,7 +37,7 @@ public final class AuraF extends MotionCheck {
 			return;
 		}
 		
-		final boolean cinematic = false; // TODO this.wrapper.getMotionProcessor().isCinematic();
+		final boolean cinematic = this.wrapper.getMotionProcessor().isCinematic();
 		final boolean attacking = this.wrapper.getCombatProcessor().isInCombat();
 		if (!attacking || cinematic) {
 			// Do not check

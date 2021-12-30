@@ -1,6 +1,24 @@
+/**
+ * Velox Anticheat | Simple, stable and accurate anticheat
+ * Copyright (C) 2021-2022 Marco Moesman ("Rammelkast")
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.rammelkast.veloxanticheat.player.processor;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.bukkit.Material;
@@ -11,9 +29,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.BoundingBox;
 
+import com.google.common.collect.Lists;
 import com.rammelkast.veloxanticheat.VeloxAnticheat;
 import com.rammelkast.veloxanticheat.checks.type.MotionCheck;
 import com.rammelkast.veloxanticheat.player.PlayerWrapper;
+import com.rammelkast.veloxanticheat.utils.GraphLib;
 import com.rammelkast.veloxanticheat.utils.MathLib;
 import com.rammelkast.veloxanticheat.utils.Motion;
 import com.rammelkast.veloxanticheat.utils.TickTimer;
@@ -48,6 +68,12 @@ public final class MotionProcessor extends Processor {
 	// 'Last / previous' states - local use only
 	private boolean wasOnGround;
 	private long lastMotionTime;
+	
+	// Cinematic related
+	private final List<Double> yawSamples = Lists.newArrayList();
+    private final List<Double> pitchSamples = Lists.newArrayList();
+	private boolean cinematic;
+	private long lastSmooth, lastHighRate;
 	
 	@Override
 	public void process(final PlayerWrapper wrapper, final Event event) {
@@ -155,12 +181,15 @@ public final class MotionProcessor extends Processor {
 		// Pass new location to timed list
 		wrapper.getLocations().add(new TimedLocation(motion.getTo(), MathLib.now()));
 		
+		// Check if player is using cinematic mode
+		checkCinematic(motion);
+		
 		// Pass motion to checks
 		wrapper.getChecks().stream().filter(MotionCheck.class::isInstance)
 				.filter(check -> VeloxAnticheat.getInstance().getSettingsManager().isCheckEnabled(check))
 				.forEach(check -> ((MotionCheck) check).process(motion));
 	}
-	
+
 	private boolean collides(final World world, final BoundingBox box, final boolean matchAll, final Predicate<Material> predicate) {
 		final int minX = (int) Math.floor(box.getMinX());
 		final int maxX = (int) Math.ceil(box.getMaxX());
@@ -183,7 +212,57 @@ public final class MotionProcessor extends Processor {
 		return matchAll ? blocks.stream().allMatch(block -> predicate.test(block.getType()))
 				: blocks.stream().anyMatch(block -> predicate.test(block.getType()));
 	}
+	
+	/**
+	 * @author ElevatedDev (from Frequency)
+	 */
+	private void checkCinematic(final Motion motion) {
+		final long now = MathLib.now();
+		final double deltaYaw = motion.getYaw();
+        final double deltaPitch = motion.getPitch();
 
+        final double differenceYaw = Math.abs(deltaYaw - this.previous.getYaw());
+        final double differencePitch = Math.abs(deltaPitch - this.previous.getPitch());
+
+        final double joltYaw = Math.abs(differenceYaw - deltaYaw);
+        final double joltPitch = Math.abs(differencePitch - deltaPitch);
+
+        final boolean cinematic = (now - lastHighRate > 250L) || now - lastSmooth < 9000L;
+        
+        if (joltYaw > 1.0 && joltPitch > 1.0) {
+            this.lastHighRate = now;
+        }
+
+        if (deltaPitch > 0.0 && deltaPitch > 0.0) {
+            this.yawSamples.add(deltaYaw);
+            this.pitchSamples.add(deltaPitch);
+        }
+
+        if (yawSamples.size() == 20 && pitchSamples.size() == 20) {
+            // Get the cerberus/positive graph of the sample-lists
+            final GraphLib.GraphResult resultsYaw = GraphLib.getGraph(this.yawSamples);
+            final GraphLib.GraphResult resultsPitch = GraphLib.getGraph(this.pitchSamples);
+
+            // Negative values
+            final int negativesYaw = resultsYaw.getNegatives();
+            final int negativesPitch = resultsPitch.getNegatives();
+
+            // Positive values
+            final int positivesYaw = resultsYaw.getPositives();
+            final int positivesPitch = resultsPitch.getPositives();
+
+            // Cinematic camera usually does this on *most* speeds and is accurate for the most part.
+            if (positivesYaw > negativesYaw || positivesPitch > negativesPitch) {
+                this.lastSmooth = now;
+            }
+
+            this.yawSamples.clear();
+            this.pitchSamples.clear();
+        }
+
+        this.cinematic = cinematic;
+	}
+	
 	/**
 	 * Gets the current motion
 	 * 
@@ -290,6 +369,15 @@ public final class MotionProcessor extends Processor {
 	 */
 	public double getLagFactor() {
 		return this.lagFactor;
+	}
+	
+	/**
+	 * Gets if the player is using cinematic mode
+	 * 
+	 * @return true if cinematic mode
+	 */
+	public boolean isCinematic() {
+		return this.cinematic;
 	}
 	
 }
