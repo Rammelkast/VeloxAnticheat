@@ -35,10 +35,10 @@ public final class SpeedA extends MotionCheck {
 
 	// Settings
 	private static final Setting RUBBERBAND = new Setting("rubberband", SettingType.BOOLEAN);
-	
+
 	private double adjusted;
 	private float friction;
-	
+
 	public SpeedA(final PlayerWrapper wrapper) {
 		super(wrapper);
 	}
@@ -48,12 +48,12 @@ public final class SpeedA extends MotionCheck {
 		if (exempt(Exemption.CONNECTING, Exemption.CHUNK_LOADING, Exemption.GLIDING)) {
 			return;
 		}
-		
+
 		/**
-		 * This check is mostly based on the client movement code
-		 * We do assume some best case scenarios here, like always sprinting
-		 * This corner cutting seems to be the best way to reduce false positives
-		 * I dislike the wacky ice false positive fix, but I'm also too lazy to improve it
+		 * This check is mostly based on the client movement code We do assume some best
+		 * case scenarios here, like always sprinting This corner cutting seems to be
+		 * the best way to reduce false positives I dislike the wacky ice false positive
+		 * fix, but I'm also too lazy to improve it
 		 */
 		final double horizontal = motion.getHorizontal();
 		final float angle = motion.getAngle();
@@ -75,24 +75,24 @@ public final class SpeedA extends MotionCheck {
 
 			// Apply jump boost if jumping or when having a head collision
 			// Might want to hard check against known jump deltas here
-            if (!motion.isOnGround() && (this.wrapper.getMotionProcessor().hasHeadCollision() || motion.getY() >= 0.42f)) {
-                movementSpeed += 0.2f;
-            }
+			if (!motion.isOnGround()
+					&& (this.wrapper.getMotionProcessor().hasHeadCollision() || motion.getY() >= 0.42f)) {
+				movementSpeed += 0.2f;
+			}
 		} else {
 			// Movement in air in simple
 			movementSpeed = 0.026f;
 			this.friction = 0.91f;
 		}
-	
+
 		// Add velocities
 		movementSpeed += this.wrapper.getVelocityProcessor().getHorizontal();
 
 		final double factor = (horizontal - this.adjusted) / movementSpeed;
 		/**
-		 * Any difference lower than .001 is negligible
-		 * We check if adjusted is higher than 0.0f because
-		 * this can happen (and false) sometimes, but has no
-		 * effect on detection performance
+		 * Any difference lower than .001 is negligible We check if adjusted is higher
+		 * than 0.0f because this can happen (and false) sometimes, but has no effect on
+		 * detection performance
 		 */
 		if (factor > 1.001 && this.adjusted > 0.0f) {
 			// Verbose for debugging
@@ -101,7 +101,8 @@ public final class SpeedA extends MotionCheck {
 					+ motion.wasOnGround());
 
 			if (increaseBuffer() > 5) {
-				fail("factor: " + MathLib.roundDouble(factor, 3) + ", angle: " + MathLib.roundFloat(angle, 1), RUBBERBAND.getBoolean());
+				fail("factor: " + MathLib.roundDouble(factor, 3) + ", angle: " + MathLib.roundFloat(angle, 1),
+						RUBBERBAND.getBoolean());
 				decreaseBuffer(2);
 			}
 		} else {

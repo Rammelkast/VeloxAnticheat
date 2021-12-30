@@ -48,24 +48,24 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public final class PlayerWrapper {
 
 	private static final CheckManager CHECK_MANAGER = VeloxAnticheat.getInstance().getCheckManager();
-	
+
 	private final Player player;
 	private final List<TimedLocation> locations = new EvictingList<>(20);
-	
+
 	// Processors
 	private final MotionProcessor motionProcessor = new MotionProcessor();
 	private final CombatProcessor combatProcessor = new CombatProcessor();
 	private final VelocityProcessor velocityProcessor = new VelocityProcessor();
-	
+
 	// Checks map
 	private final ClassToInstanceMap<Check<?>> checks;
-	
+
 	// Violation map
 	private final Map<String, Float> violationMap = new HashMap<String, Float>();
-	
+
 	private long connectionTime = MathLib.now();
 	private String brand = "unknown";
-	
+
 	/**
 	 * Creates a player wrapper
 	 * 
@@ -78,7 +78,7 @@ public final class PlayerWrapper {
 		getChecks().stream().filter(check -> !this.violationMap.containsKey(check.getName().toLowerCase()))
 				.forEach(check -> this.violationMap.put(check.getName().toLowerCase(), 0.0f));
 	}
-	
+
 	/**
 	 * Registers a violation for the given check
 	 * 
@@ -89,31 +89,33 @@ public final class PlayerWrapper {
 		if (!this.violationMap.containsKey(name)) {
 			throw new RuntimeException("Invalid check '" + name + "' for violation registration!");
 		}
-		
+
 		final float currentValue = this.violationMap.get(name);
 		// Add weight for new value
-		final float weight = (float) VeloxAnticheat.getInstance().getSettingsManager().getDouble("checks." + name + ".type" + check.getType() + ".weight");
+		final float weight = (float) VeloxAnticheat.getInstance().getSettingsManager()
+				.getDouble("checks." + name + ".type" + check.getType() + ".weight");
 		final float newValue = currentValue + weight;
 		// Store new violation level
 		this.violationMap.put(name, MathLib.roundFloat(newValue, 2));
-		
+
 		// Create and call event
 		final VeloxFlagEvent event = new VeloxFlagEvent(check, newValue);
 		Bukkit.getServer().getPluginManager().callEvent(event);
-		
+
 		final int oldFloored = NumberConversions.floor(currentValue);
 		final int newFloored = NumberConversions.floor(newValue);
 		final int notify = VeloxAnticheat.getInstance().getSettingsManager().getInt("checks." + name + ".notify-vl");
 		final int kick = VeloxAnticheat.getInstance().getSettingsManager().getInt("checks." + name + ".kick-vl");
 		if (oldFloored < notify && newFloored >= notify) {
 			// Send to all players with the alert permissions
+			// TODO this code is an ugly incomprehensible mess
 			Bukkit.getServer().getOnlinePlayers().forEach(player -> {
 				if (player.hasPermission("velox.alert")) {
-					final TextComponent component = new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "VAC " + ChatColor.DARK_GRAY + "> "
-							+ ChatColor.YELLOW + getPlayer().getName() + ChatColor.GRAY + " failed " + ChatColor.RED
-							+ check.getName() + ChatColor.GRAY + " (" + check.getType() + ") " + ChatColor.YELLOW + "["
-							+ check.getViolatons() + "x]" + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "ping: "
-							+ getPlayer().getPing() + "ms, tps: "
+					final TextComponent component = new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "VAC "
+							+ ChatColor.DARK_GRAY + "> " + ChatColor.YELLOW + getPlayer().getName() + ChatColor.GRAY
+							+ " failed " + ChatColor.RED + check.getName() + ChatColor.GRAY + " (" + check.getType()
+							+ ") " + ChatColor.YELLOW + "[" + check.getViolatons() + "x]" + ChatColor.DARK_GRAY + " | "
+							+ ChatColor.GRAY + "ping: " + getPlayer().getPing() + "ms, tps: "
 							+ MathLib.roundDouble(VeloxAnticheat.getInstance().getTPS(), 1));
 					final float confidence = MathLib.roundFloat((newFloored / (float) check.getViolatons()), 1);
 					final String confidenceString = ((confidence > 2.0f) ? (ChatColor.RED + "very high")
@@ -131,12 +133,11 @@ public final class PlayerWrapper {
 			});
 		} else if (oldFloored < kick && newFloored >= kick) {
 			getPlayer().kickPlayer(ChatColor.DARK_GRAY + "« " + ChatColor.RED + "" + ChatColor.BOLD + "Velox Anticheat "
-					+ ChatColor.DARK_GRAY + "»\n\n" + ChatColor.GRAY
-					+ "You have been removed from the server:\n" + ChatColor.WHITE + "Unfair advantage " + ChatColor.YELLOW + "["
-					+ check.getName() + "]");
+					+ ChatColor.DARK_GRAY + "»\n\n" + ChatColor.GRAY + "You have been removed from the server:\n"
+					+ ChatColor.WHITE + "Unfair advantage " + ChatColor.YELLOW + "[" + check.getName() + "]");
 		}
 	}
-	
+
 	/**
 	 * Decreases all violation levels by the given factor
 	 * 
@@ -148,7 +149,7 @@ public final class PlayerWrapper {
 			this.violationMap.put(name, MathLib.roundFloat((float) (level * factor), 2));
 		});
 	}
-	
+
 	/**
 	 * Gets the Bukkit {@link Player} object for this wrapper
 	 * 
@@ -157,14 +158,15 @@ public final class PlayerWrapper {
 	public Player getPlayer() {
 		return this.player;
 	}
-	
+
 	/**
 	 * Gets a collection of {@link Check} instances for this wrapper
+	 * 
 	 * @return the wrapper's checks
 	 */
 	public Collection<Check<?>> getChecks() {
-        return this.checks.values();
-    }
+		return this.checks.values();
+	}
 
 	/**
 	 * Gets the timestamp when this player connected
@@ -183,7 +185,7 @@ public final class PlayerWrapper {
 	public void setConnectionTime(final long connectionTime) {
 		this.connectionTime = connectionTime;
 	}
-	
+
 	/**
 	 * Gets the motion processor
 	 * 
@@ -192,7 +194,7 @@ public final class PlayerWrapper {
 	public MotionProcessor getMotionProcessor() {
 		return this.motionProcessor;
 	}
-	
+
 	/**
 	 * Gets the combat processor
 	 * 
@@ -201,7 +203,7 @@ public final class PlayerWrapper {
 	public CombatProcessor getCombatProcessor() {
 		return this.combatProcessor;
 	}
-	
+
 	/**
 	 * Gets the velocity processor
 	 * 
@@ -210,9 +212,10 @@ public final class PlayerWrapper {
 	public VelocityProcessor getVelocityProcessor() {
 		return this.velocityProcessor;
 	}
-	
+
 	/**
-	 * Gets the allowed player movement speed through the "GENERIC_MOVEMENT_SPEED" attribute
+	 * Gets the allowed player movement speed through the "GENERIC_MOVEMENT_SPEED"
+	 * attribute
 	 * 
 	 * @return the allowed player movement speed
 	 */
@@ -220,7 +223,7 @@ public final class PlayerWrapper {
 		final AttributeInstance attribute = this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
 		return attribute.getValue();
 	}
-	
+
 	/**
 	 * Get the players history of {@link TimedLocation}s
 	 * 
@@ -238,7 +241,7 @@ public final class PlayerWrapper {
 	public void setBrand(final String brand) {
 		this.brand = brand;
 	}
-	
+
 	/**
 	 * Gets the client brand
 	 * 
@@ -247,7 +250,7 @@ public final class PlayerWrapper {
 	public String getBrand() {
 		return this.brand;
 	}
-	
+
 	/**
 	 * Gets the violation map
 	 * 
@@ -256,5 +259,5 @@ public final class PlayerWrapper {
 	public Map<String, Float> getViolationMap() {
 		return this.violationMap;
 	}
-	
+
 }

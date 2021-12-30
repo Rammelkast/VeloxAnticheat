@@ -36,12 +36,12 @@ public final class AuraC extends MotionCheck {
 		if (exempt(Exemption.CONNECTING)) {
 			return;
 		}
-		
+
 		if (!motion.hasRotation()) {
 			// No rotation -> do not check
 			return;
 		}
-		
+
 		final float pitch = motion.getTo().getPitch();
 		final float deltaPitch = motion.getPitch();
 		final float lastDeltaPitch = this.wrapper.getMotionProcessor().getPrevious().getPitch();
@@ -52,21 +52,22 @@ public final class AuraC extends MotionCheck {
 		/**
 		 * Can't have an anticheat without a GCD aura/aim check
 		 */
-		final long gcd = MathLib.getGcd((long) (deltaPitch * MathLib.EXPANDER), (long) (lastDeltaPitch * MathLib.EXPANDER));
+		final long gcd = MathLib.getGcd((long) (deltaPitch * MathLib.EXPANDER),
+				(long) (lastDeltaPitch * MathLib.EXPANDER));
 		final boolean invalid = gcd < 131072L && deltaPitch > 0.0f && deltaPitch < 30.0f && pitch < 65.0f && !cinematic;
-        if (attacking) {
-        	if (invalid) {
-        		// Verbose for debugging
-        		verbose("gcd: " + gcd + ", pitch: " + pitch + ", delta: " + deltaPitch);
-        		 
-                if (increaseBuffer() > 7.5) {
-                    fail("gcd: " + gcd);
-                    decreaseBuffer(2.5);
-                }
-            } else {
-                decreaseBuffer();
-            }
-        }
+		if (attacking) {
+			if (invalid) {
+				// Verbose for debugging
+				verbose("gcd: " + gcd + ", pitch: " + pitch + ", delta: " + deltaPitch);
+
+				if (increaseBuffer() > 7.5) {
+					fail("gcd: " + gcd);
+					decreaseBuffer(2.5);
+				}
+			} else {
+				decreaseBuffer();
+			}
+		}
 	}
 
 }
