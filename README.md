@@ -16,4 +16,4 @@ Please include the following information with your issue:
 + Any logs, videos or screenshots relating to the issue
 
 # License
-Velox Anticheat is licensed under the [GPL-3.0](https://github.com/Rammelkast/VeloxAnticheat/blob/master/LICENSE) license.
+Velox Anticheat is **almost** entirely licensed under the [GPL-3.0](https://github.com/Rammelkast/VeloxAnticheat/blob/master/LICENSE) license. Any deviations from GPL-3.0 will be noted in the class or file copyright header.
