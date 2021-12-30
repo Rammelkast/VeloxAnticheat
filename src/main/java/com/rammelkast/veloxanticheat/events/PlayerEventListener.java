@@ -19,6 +19,7 @@ package com.rammelkast.veloxanticheat.events;
 
 import java.util.concurrent.Callable;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -92,6 +93,23 @@ public final class PlayerEventListener implements Listener {
 		// Fetch wrapper
 		final PlayerWrapper wrapper = PLAYER_MANAGER.fetch(player);
 		if (wrapper == null) {
+			return;
+		}
+		
+		wrapper.checkRubberbandCandidate(event.getFrom());
+
+		if (wrapper.getRubberbandTicks() > 0) {
+			if (event.getFrom().distanceSquared(event.getTo()) != 0.0) {
+				wrapper.setRubberbandTicks(Math.max(0, wrapper.getRubberbandTicks() - 1));
+			}
+			
+			final Location rubberband = wrapper.getRubberbandLocation().clone();
+			// Do not rubberband head position
+			{
+				rubberband.setYaw(event.getTo().getYaw());
+				rubberband.setPitch(event.getTo().getPitch());
+			}
+			event.setTo(rubberband);
 			return;
 		}
 		

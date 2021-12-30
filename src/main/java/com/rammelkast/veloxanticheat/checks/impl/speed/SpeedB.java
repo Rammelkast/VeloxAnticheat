@@ -44,7 +44,7 @@ public final class SpeedB extends MotionCheck {
 
 	@Override
 	public void process(final Motion motion) {
-		if (exempt(Exemption.CONNECTING, Exemption.CREATIVE, Exemption.GLIDING, Exemption.WAS_FLYING)) {
+		if (exempt(Exemption.CONNECTING, Exemption.CREATIVE, Exemption.GLIDING, Exemption.WAS_FLYING, Exemption.RIPTIDING)) {
 			return;
 		}
 		

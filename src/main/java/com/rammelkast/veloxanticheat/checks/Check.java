@@ -103,7 +103,9 @@ public abstract class Check<T> {
 					+ ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "ping: " + this.wrapper.getPlayer().getPing()
 					+ "ms, tps: " + MathLib.roundDouble(VeloxAnticheat.getInstance().getTPS(), 1));
 		} else {
-			// TODO rubberband
+			if (rubberband) {
+				this.wrapper.setRubberbandTicks(VeloxAnticheat.getInstance().getSettingsManager().getRubberbandTicks());
+			}
 			this.wrapper.registerViolation(this);
 		}
 	}

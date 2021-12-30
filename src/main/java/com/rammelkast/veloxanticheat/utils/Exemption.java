@@ -35,7 +35,7 @@ public enum Exemption {
 
 	CREATIVE(wrapper -> wrapper.getPlayer().getGameMode() == GameMode.CREATIVE),
 
-	GLIDING(wrapper -> wrapper.getPlayer().isGliding()),
+	GLIDING(wrapper -> wrapper.getPlayer().isGliding()), // TODO use a timer for this
 
 	LEVITATING(wrapper -> wrapper.getPlayer().hasPotionEffect(PotionEffectType.LEVITATION)),
 
@@ -55,7 +55,9 @@ public enum Exemption {
 	BAD_CONNECTION(wrapper -> wrapper.getMotionProcessor().getLagFactor() > 1.5
 			&& wrapper.getMotionProcessor().getPacketStreak() != 1),
 	
-	WAS_FLYING(wrapper -> wrapper.getMotionProcessor().flyingTimer.hasNotPassed(20));
+	WAS_FLYING(wrapper -> wrapper.getMotionProcessor().flyingTimer.hasNotPassed(20)),
+	
+	RIPTIDING(wrapper -> wrapper.getPlayer().isRiptiding()); // TODO use a timer for this (5-10 ticks?)
 
 	private final Function<PlayerWrapper, Boolean> action;
 

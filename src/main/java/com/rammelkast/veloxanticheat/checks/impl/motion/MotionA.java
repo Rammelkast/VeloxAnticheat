@@ -44,7 +44,7 @@ public final class MotionA extends MotionCheck {
 	@Override
 	public void process(final Motion motion) {
 		if (exempt(Exemption.CONNECTING, Exemption.CHUNK_LOADING, Exemption.GLIDING, Exemption.LIQUID,
-				Exemption.CLIMBABLE, Exemption.BED, Exemption.SLIME, Exemption.HEAD_COLLISION)) {
+				Exemption.CLIMBABLE, Exemption.BED, Exemption.SLIME, Exemption.HEAD_COLLISION, Exemption.RIPTIDING)) {
 			return;
 		}
 

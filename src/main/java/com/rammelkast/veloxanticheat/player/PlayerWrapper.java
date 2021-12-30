@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
@@ -39,6 +40,7 @@ import com.rammelkast.veloxanticheat.player.processor.MotionProcessor;
 import com.rammelkast.veloxanticheat.player.processor.VelocityProcessor;
 import com.rammelkast.veloxanticheat.utils.EvictingList;
 import com.rammelkast.veloxanticheat.utils.MathLib;
+import com.rammelkast.veloxanticheat.utils.Motion;
 import com.rammelkast.veloxanticheat.utils.TimedLocation;
 
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -63,6 +65,10 @@ public final class PlayerWrapper {
 	// Violation map
 	private final Map<String, Float> violationMap = new HashMap<String, Float>();
 
+	// Rubberband data
+	private Location rubberbandLocation;
+	private int rubberbandTicks;
+	
 	private long connectionTime = MathLib.now();
 	private String brand = "unknown";
 
@@ -148,6 +154,23 @@ public final class PlayerWrapper {
 		this.violationMap.forEach((name, level) -> {
 			this.violationMap.put(name, MathLib.roundFloat((float) (level * factor), 2));
 		});
+	}
+	
+	/**
+	 * Submits a location to be considered as a rubberband position
+	 * 
+	 * @param location The location
+	 */
+	public void checkRubberbandCandidate(final Location location) {
+		if (getMotionProcessor().getCurrent() == null || getMotionProcessor().getPrevious() == null) {
+			return;
+		}
+
+		final Motion current = getMotionProcessor().getCurrent();
+		if (this.rubberbandTicks == 0 && current.isOnGround()
+				&& (current.getTo().getY() % 0.015625 == 0.0 || current.getFrom().getY() % 0.015625 == 0.0)) {
+			this.rubberbandLocation = location;
+		}
 	}
 
 	/**
@@ -258,6 +281,33 @@ public final class PlayerWrapper {
 	 */
 	public Map<String, Float> getViolationMap() {
 		return this.violationMap;
+	}
+	
+	/**
+	 * Gets the rubberband location
+	 * 
+	 * @return the rubberband location
+	 */
+	public Location getRubberbandLocation() {
+		return this.rubberbandLocation;
+	}
+	
+	/**
+	 * Gets the amount of rubberband ticks
+	 * 
+	 * @return the amount of rubberband ticks
+	 */
+	public int getRubberbandTicks() {
+		return this.rubberbandTicks;
+	}
+
+	/**
+	 * Sets the amount of rubberband ticks
+	 * 
+	 * @param ticks The new amount of rubberband ticks
+	 */
+	public void setRubberbandTicks(final int ticks) {
+		this.rubberbandTicks = ticks;
 	}
 
 }
